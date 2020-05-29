@@ -1,44 +1,35 @@
-; GDT with two completely overlapping segments - code and data.
-gdt_start:
+gdt_start: ;Labels are needed to compute sizes and jumps
+    ; the GDT starts with a null 8-byte
+    dd 0x0 ; 4 byte
+    dd 0x0 ; 4 byte
 
-;Filling the first 8 bytes with zeros
-gdt_null:
-	dd 0x0 ;dd fills double word (4 bytes). A word is 16 bits (2 bytes).
-	dd 0x0
+; GDT for code segment. base = 0x00000000, length = 0xfffff
+; for flags, refer to os-dev.pdf document, page 36
+gdt_code: 
+    dw 0xffff    ; segment length, bits 0-15
+    dw 0x0       ; segment base, bits 0-15
+    db 0x0       ; segment base, bits 16-23
+    db 10011010b ; flags (8 bits)
+    db 11001111b ; flags (4 bits) + segment length, bits 16-19
+    db 0x0       ; segment base, bits 24-31
 
-gdt_code:
-;base = 0x0 (32 bits), limit = 0xfffff (20 bits)
-;flags - (present)1 privilege(00) (descriptor type)1 == 1001b
-;type flags - (code)1 (conforming)0 (readable)1 (accessed)0 == 1010b
-;flags - (granularity)1 (32-bit default)1 (64-bit seg)0 (AVL)0 == 1100b
-
-;Filling as per the structure
-	dw 0xffff
-	dw 0x0
-	db 0x0
-	db 10011010b
-	db 11001111b
-	db 0x0
-
+; GDT for data segment. base and length identical to code segment
+; some flags changed, again, refer to os-dev.pdf
 gdt_data:
-;Same as above
-;type flags - (code)0 (expand_down)0 (writable)1 (accessed)0 == 0010b
+    dw 0xffff
+    dw 0x0
+    db 0x0
+    db 10010010b
+    db 11001111b
+    db 0x0
 
-;Filling as per the structure
-	dw 0xffff
-	dw 0x0
-	db 0x0
-	db 10010010b
-	db 11001111b
-	db 0x0
+gdt_end:
 
-gdt_end: ;Put only to calculate the size of the GDT for the GDT descriptor
-
+; GDT descriptor
 gdt_descriptor:
-	dw gdt_end - gdt_start - 1 ;Size of the gdt
-	dd gdt_start ;Start address of gdt
+    dw gdt_end - gdt_start - 1 ; size (16 bit), always one less of its true size
+    dd gdt_start ; address (32 bit)
 
-;Useful constants
+; define some constants for later use
 CODE_SEG equ gdt_code - gdt_start
 DATA_SEG equ gdt_data - gdt_start
-

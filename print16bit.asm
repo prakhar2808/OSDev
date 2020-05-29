@@ -1,4 +1,4 @@
-print:
+print16bit:
 	pusha
 
 begin:
