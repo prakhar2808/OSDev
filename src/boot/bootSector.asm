@@ -20,11 +20,11 @@ call switch_to_pm ;Switch to 32-bit protected mode, won't return from there
 jmp $
 
 ; Including useful assembly routines
-%include "../util/print16bit.asm"
-%include "../util/print32bit.asm"
-%include "../util/32bitSwitch.asm"
-%include "../util/loadGDT.asm"
-%include "../util/diskLoad.asm"
+%include "boot/print16bit.asm"
+%include "boot/print32bit.asm"
+%include "boot/32bitSwitch.asm"
+%include "boot/loadGDT.asm"
+%include "boot/diskLoad.asm"
 
 [bits 16] ;Kernel is being loaded while in bits 16
 load_kernel:
