@@ -19,7 +19,7 @@ disk_load:
 
 disk_error:
 	mov bx, DISK_ERROR_MSG
-	call print
+	call print16bit
 	jmp $ ;Hang here due to error.
 
 ;Variables
