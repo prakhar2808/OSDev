@@ -4,30 +4,30 @@
 
 ;Common isr_code
 isr_common_stub:
-	;Save the CPU state
-	pusha
-	mov ax, ds ;Lower 16 bits of eax = ds
-	push eax
-	;Entering kernel mode
-	mov ax, 0x10 ;Kernel data segment descriptor
-	mov ds, ax
-	mov es, ax
-	mov fs, ax
-	mov gs, ax
+  ;Save the CPU state
+  pusha
+  mov ax, ds ;Lower 16 bits of eax = ds
+  push eax
+  ;Entering kernel mode
+  mov ax, 0x10 ;Kernel data segment descriptor
+  mov ds, ax
+  mov es, ax
+  mov fs, ax 
+  mov gs, ax
 
-	;Call the C handler for the interrupt (the actual code to run on interrupt)
-	call isr_handler
+  ;Call the C handler for the interrupt (the actual code to run on interrupt)
+  call isr_handler
 
-	;Restore the CPU state
-	pop eax
-	mov ds, ax
-	mov es, ax
-	mov fs, ax
-	mov gs, ax
-	popa
-	add esp, 8 ;Cleans up the pushed error code and pushed ISR number
-	sti
-	iret
+  ;Restore the CPU state
+  pop eax
+  mov ds, ax
+  mov es, ax
+  mov fs, ax
+  mov gs, ax
+  popa
+  add esp, 8 ;Cleans up the pushed error code and pushed ISR number
+  sti
+  iret
 
 ;Common irq_code
 irq_common_stub:
