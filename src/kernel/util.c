@@ -1,6 +1,5 @@
-/**
- * K&R implementation
- */
+#include "util.h"
+
 void int_to_ascii(int n, char str[]) {
     int i, sign;
 		// Set to 1 if the number is negative
