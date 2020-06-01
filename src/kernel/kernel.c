@@ -15,6 +15,19 @@ void user_input(char str[]) {
   printk("Kernel has received the message : ");
   printk(str);
   printk("\n");
+  if(strcmp(str, "PAGE")) {
+    u32 physical_addr = kmalloc(0x1000, 1);
+    if(physical_addr == -1) {
+      printk("Bad kmalloc : Memory not available\n");
+    }
+    else {
+      printk("Page alloted at physical address : ");
+      char* address;
+      hex_to_ascii(physical_addr, address);
+      printk(address);
+      printk("\n");
+    }
+  }
   if(strcmp(str, "EXIT")) {
     printk("Kernel is stopping now ...\n");
     printk("Goodbye!\n");
