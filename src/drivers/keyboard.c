@@ -21,32 +21,34 @@ const char sc_ascii[] = { '?', '?', '1', '2', '3', '4', '5', '6', '7', '8',
 static void keyboard_callback(registers_t regs) {
   /* The PIC leaves us the scancode in port 0x60 */
   u8 scancode = port_byte_in(0x60);
-	
-	// Nothing to be done for touch up and undefined touch downs.
-	if(scancode > SC_MAX) {
-		return;
-	}
+  
+  // Nothing to be done for touch up and undefined touch downs.
+  if(scancode > SC_MAX) {
+    return;
+  }
 
-	if(scancode == BACKSPACE) {
-		if(strlen(key_buffer)) {
-			backspace(key_buffer);
-			printk_backspace();
-		}
-	}
-	else if(scancode == ENTER) {
-		printk("\n");
-		user_input(key_buffer);
-		clear(key_buffer);
-	}
-	else {
-		char key_letter = sc_ascii[(int)scancode];
-		char str[2] = {key_letter, '\0'};
-		//Append the key to the input buffer
-		append(key_buffer, str);
-		printk(str);
-	}
+  if(scancode == BACKSPACE) {
+    if(strlen(key_buffer)) {
+      backspace(key_buffer);
+      printk_backspace();
+    }
+  }
+  else if(scancode == ENTER) {
+    printk("\n");
+    user_input(key_buffer);
+    clear(key_buffer);
+  }
+  else {
+    char key_letter = sc_ascii[(int)scancode];
+    char str[2] = {key_letter, '\0'};
+    //Append the key to the input buffer
+    append(key_buffer, str);
+    printk(str);
+  }
 }
 
 void init_keyboard() {
   register_interrupt_handler(IRQ1, keyboard_callback); 
 }
+
+  huhu

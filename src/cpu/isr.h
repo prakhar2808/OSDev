@@ -76,10 +76,10 @@ extern void irq15();
 
 // Struct to aggregate the registers
 typedef struct {
-	u32 ds; // Data segment
-	u32 edi, esi, ebp, esp, ebx, edx, ecx, eax; // Can be pushed by pusha
-	u32 int_no, err_code; // Interrupt number number and error code
-	u32 eip, cs, eflags, useresp, ss; // Pushed by the processor automatically
+  u32 ds; // Data segment
+  u32 edi, esi, ebp, esp, ebx, edx, ecx, eax; // Can be pushed by pusha
+  u32 int_no, err_code; // Interrupt number number and error code
+  u32 eip, cs, eflags, useresp, ss; // Pushed by the processor automatically
 } registers_t;
 
 void isr_install();

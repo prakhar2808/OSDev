@@ -11,6 +11,6 @@ void set_idt_gate_entry(int n, u32 handler) {
 void set_idt_reg() {
     idt_reg.base = (u32) &idt;
     idt_reg.limit = IDT_ENTRIES * sizeof(idt_gate_entry) - 1;
-		// To load IDT in memory.
+    // To load IDT in memory.
     __asm__ __volatile__("lidtl (%0)" : : "r" (&idt_reg));
 }
