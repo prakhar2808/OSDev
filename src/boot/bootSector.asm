@@ -30,6 +30,7 @@ jmp $
 load_kernel:
 	mov bx, MSG_LOAD_KERNEL
 	call print16bit
+	call print_newline
 
 	mov bx, KERNEL_OFFSET ;Memory init address to load kernel.
 	mov dh, 15 ;Number of sectors to load -- 5*512 bytes will be loaded.
