@@ -1,7 +1,4 @@
-#include "../kernel/util.h"
-#include "ports.h"
 #include "screen.h"
-
 
 /* Private kernel functions declaration */
 int print_char(char character, int col, int row, char attribute_type);
@@ -52,6 +49,16 @@ void printk_at(char* text, int col, int row) {
 //To print at the location of the cursor
 void printk(char* text) {
 	printk_at(text, -1, -1);
+}
+
+//To print backspace
+void printk_backspace() {
+	int offset = get_cursor_offset();
+	offset -= 2;
+	int col = get_offset_col(offset);
+	int row = get_offset_row(offset);
+	printk_at(" ", col, row);
+	set_cursor_offset(get_offset(col, row));
 }
 
 /*******************************************************************************
@@ -150,7 +157,7 @@ int handle_scrolling(int offset) {
 	//Copying rows back by 1
 	int i;
 	for(i = 1; i < MAX_ROWS; i++) {
-		memory_copy(VIDEO_ADDRESS + get_offset(0, i), 
+		memcpy(VIDEO_ADDRESS + get_offset(0, i), 
 								VIDEO_ADDRESS + get_offset(0, i - 1), 
 								MAX_COLS * 2);
 	}

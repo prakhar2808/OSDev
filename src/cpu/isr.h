@@ -1,6 +1,9 @@
 #ifndef ISR_H
 #define ISR_H
 
+#include "idt.h"
+#include "../drivers/screen.h"
+#include "../libc/string.h"
 #include "types.h"
 
 // Interrupt service routines reserved for CPU exception.
@@ -80,6 +83,7 @@ typedef struct {
 } registers_t;
 
 void isr_install();
+void irq_install();
 void isr_handler(registers_t r);
 
 typedef void (*isr_t)(registers_t);

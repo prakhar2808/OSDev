@@ -1,6 +1,7 @@
 #ifndef IDT_H
 #define IDT_H
 
+#include "../libc/string.h"
 #include "types.h"
 
 //Segment selector

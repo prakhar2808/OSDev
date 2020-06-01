@@ -1,7 +1,4 @@
 #include "isr.h"
-#include "idt.h"
-#include "../drivers/screen.h"
-#include "../kernel/util.h"
 
 // Array of 256 interrupt handler functions that take 'registers_t' as input and
 // return void.
@@ -124,6 +121,15 @@ char *exception_messages[] = {
     "Reserved",
     "Reserved"
 };
+
+void irq_install() {
+	// Enable interrupts
+	__asm__ __volatile__("sti");
+	// IRQ0 : Timer
+	init_timer(50);
+	// IRQ1 : Keyboard
+	init_keyboard();
+}
 
 void isr_handler(registers_t r) {
 	printk("\nReceived interrupt: ");
