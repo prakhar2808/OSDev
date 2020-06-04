@@ -84,7 +84,7 @@ void isr_install() {
 }
 
 /* To print the message which defines every exception */
-char *exception_messages[] = {
+char* exception_messages[] = {
     "Division By Zero",
     "Debug",
     "Non Maskable Interrupt",
@@ -132,13 +132,21 @@ void irq_install() {
 }
 
 void isr_handler(registers_t r) {
-  printk("\nReceived interrupt: ");
-  char s[3];
-  int_to_ascii(r.int_no, s);
-  printk(s);
-  printk("\n");
-  printk(exception_messages[r.int_no]);
-  printk("\n");
+  // Check if the handler is defined for the given interrupt
+  if(interrupt_handlers[r.int_no] != 0) {
+    isr_t handler = interrupt_handlers[r.int_no];
+    handler(r);
+  }
+  else {
+    printk("\nReceived interrupt: ");
+    char s[3];
+    int_to_ascii(r.int_no, s);
+    printk(s);
+    printk("\n");
+    printk(exception_messages[(int)r.int_no]);
+    printk("\n");
+    PANIC();
+  }
 }
 
 // handler points to a function that is to be used to handle the interrupt
@@ -161,4 +169,8 @@ void irq_handler(registers_t r) {
     isr_t handler = interrupt_handlers[r.int_no];
     handler(r);
   }
+}
+
+void PANIC() {
+  while(1);
 }

@@ -11,6 +11,12 @@ void main() {
   clear_screen();
   init_paging();
   printk("Hello User! Type a command below (EXIT to stop)\n");
+  u32 i = 0;
+  while(1) {
+    u32* ptr = (u32*)i;
+    u32 pf = *ptr;
+    i += 0x1000;
+  }
 }
 
 void user_input(char str[]) {

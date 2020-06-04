@@ -29,11 +29,9 @@ void free_frame(page_t* page) {
 
 void init_paging() {
 
-  //Register interrupt handler for page fault
-  register_interrupt_handler(IRQ14, page_fault);
   // Assuming last memory address to be 0xffffffff (4 GB).
   u32 last_memory_addr = 0xFFFFFFFF;
-  char* c[1000];
+  //char* c[1000];
   //hex_to_ascii(free_memory_addr, c);
   //printk(c);
   //printk("\n");
@@ -74,6 +72,9 @@ void init_paging() {
 
   //Enable paging
   switch_page_directory(kernel_directory);
+  
+  //Register interrupt handler for page fault
+  register_interrupt_handler(14, &page_fault);
 }
 
 void switch_page_directory(page_directory_t* new_dir) {
@@ -127,24 +128,23 @@ void page_fault(registers_t regs) {
 
   printk("Page fault occured!\n");
   if(present) {
-    printk("Present\n");
+    printk("Page not present\n");
   }
   if(rw) {
-    printk("Read-only\n");
+    printk("Tried writing to read-only page\n");
   }
   if(us) {
-    printk("User-mode\n");
+    printk("User-mode process tries for kernel page\n");
   }
   if(reserved) {
-    printk("Reserved\n");
+    printk("Trying to overwrite reserved bits\n");
   }
   printk("Faulting address : ");
-  char* ch;
-  hex_to_ascii(faulting_addr, ch);
-  printk(ch);
+  char* str;
+  hex_to_ascii(faulting_addr, str);
+  printk(str);
   printk("\n");
-  
-  // Infinite loop
-  while(1);
+
+  PANIC();
 }
 
