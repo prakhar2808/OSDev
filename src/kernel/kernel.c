@@ -3,11 +3,13 @@
 #include "../libc/string.h"
 #include "../cpu/isr.h"
 #include "../cpu/idt.h"
+#include "../libc/paging.h"
 
 void main() {
   isr_install();
   irq_install();
   clear_screen();
+  init_paging();
   printk("Hello User! Type a command below (EXIT to stop)\n");
 }
 
