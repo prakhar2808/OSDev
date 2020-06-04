@@ -16,7 +16,7 @@ init_pm: ; we are now using 32-bit instructions
     mov fs, ax
     mov gs, ax
 
-    mov ebp, 0x90000 ;Update the stack right at the top of the free space
+    mov ebp, 0xa0000 ;Update the stack right at the top of the free space
     mov esp, ebp
 
     call begin_pm ;Call a well-known label with useful code
