@@ -38,7 +38,7 @@ load_kernel:
   mov ax, 0xf800
   mov es, ax
 	mov bx, KERNEL_OFFSET ;Memory init address to load kernel.
-	mov dh, 15 ;Number of sectors to load -- 5*512 bytes will be loaded.
+	mov dh, 100 ;Number of sectors to load -- 100*512 bytes will be loaded.
 	mov dl, [BOOT_DRIVE] ;Boot drive from where to load
 	call disk_load
 
