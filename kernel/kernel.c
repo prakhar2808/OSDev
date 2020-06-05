@@ -3,7 +3,7 @@
 #include "../libc/string.h"
 #include "../cpu/isr.h"
 #include "../cpu/idt.h"
-#include "../libc/paging.h"
+#include "../mmu/paging.h"
 
 void main() {
   isr_install();
