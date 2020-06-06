@@ -3,20 +3,33 @@
 #include "../libc/string.h"
 #include "../cpu/isr.h"
 #include "../cpu/idt.h"
-#include "../mmu/paging.h"
+#include "../libc/kheap.h"
 
 void main() {
   isr_install();
   irq_install();
   clear_screen();
+  char ch[200];
+  u32 a = kmalloc(8, 0);
+  hex_to_ascii(a, ch);
+  printk(ch);
+  printk("\n");
   init_paging();
-  printk("Hello User! Type a command below (EXIT to stop)\n");
-  u32 i = 0;
-  while(1) {
-    u32* ptr = (u32*)i;
-    u32 pf = *ptr;
-    i += 0x1000;
-  }
+  //printk("Hello User! Type a command below (EXIT to stop)\n");
+  u32 b = kmalloc(8, 0);
+  hex_to_ascii(b,ch);
+  printk(ch);
+  printk("\n");
+  u32 c = kmalloc(10,0);
+  hex_to_ascii(c,ch);
+  printk(ch);
+  printk("\n");
+  kfree(b);
+  kfree(c);
+  b = kmalloc(8,0);
+  hex_to_ascii(b,ch);
+  printk(ch);
+  printk("\n");
 }
 
 void user_input(char str[]) {

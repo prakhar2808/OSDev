@@ -1,5 +1,5 @@
 #include "ordered_array.h"
-
+#include "string.h"
 s8 standard_lessthan_predicate(type_t a, type_t b) {
   if(a < b) {
     return 1;

@@ -28,20 +28,12 @@ void free_frame(page_t* page) {
 }
 
 void init_paging() {
-
   // Assuming last memory address to be 0xffffffff (4 GB).
   u32 last_memory_addr = 0xFFFFFFFF;
-  //char* c[1000];
-  //hex_to_ascii(free_memory_addr, c);
-  //printk(c);
-  //printk("\n");
   // Initializing frames bitset
   nframes = last_memory_addr / 0x1000;
   frames = (u32*)kmalloc(INDEX_FROM_BIT(nframes), 1);
   memset(frames, 0, INDEX_FROM_BIT(nframes));
-  //hex_to_ascii(free_memory_addr,c);
-  //printk(c);
-  //printk("\n");
   // Initializing page directory
   u32 phys_addr;
   kernel_directory = 
@@ -49,40 +41,39 @@ void init_paging() {
   memset(kernel_directory, 0, sizeof(page_directory_t));
   kernel_directory->physicalAddr = phys_addr;
   current_directory = kernel_directory;
-  //hex_to_ascii(&kernel_directory->tablesPhysical, c);
-  //printk(c);
-  //printk("\n");
+  // Mapping kheap pages.
+  u32 j;
+  for(j = KHEAP_START; j < KHEAP_START + KHEAP_INITIAL_SIZE; j += 0x1000) {
+    get_page(j,1,kernel_directory);
+  }
   // Identity mapping from 0x0 to currently used memory (which ends at
   // free_memory_addr).
   u32 i = 0;
-  while(i < free_memory_addr) {
+  while(i < free_memory_addr + 0x1000) {
     // Kernel code readable but not writable from user space.
-
-    char ch[2000];
     page_t* page = get_page(i, 1, kernel_directory);
-    //hex_to_ascii((int)page, ch);
-    //printk(ch);
-    //printk("\n");
-
-    alloc_frame(page, 0, 0);
+    alloc_frame(page, 0, 1);
     i += 0x1000;
-    //if(i == 0x5000)
-      //break;
   }
 
-  //Enable paging
-  switch_page_directory(kernel_directory);
+  //Allocating the earlier mapped kheap pages.
+  for(j = KHEAP_START; j < KHEAP_START + KHEAP_INITIAL_SIZE; j+=0x1000) {
+    alloc_frame(get_page(j, 1, kernel_directory), 1, 1);
+  }
   
   //Register interrupt handler for page fault
   register_interrupt_handler(14, &page_fault);
+  //Enable paging
+  switch_page_directory(kernel_directory);
+
+  //Init the kernel heap.
+  kheap = create_heap(KHEAP_START, 
+                      KHEAP_START + KHEAP_INITIAL_SIZE, 
+                      0xCFFFF000, 0, 0);
 }
 
 void switch_page_directory(page_directory_t* new_dir) {
   current_directory = new_dir;
-  //char ch[2000];
-  //hex_to_ascii(new_dir->tablesPhysical[0], ch);
-  //printk(ch);
-  //printk("\n");
   asm __volatile__("mov %0, %%cr3":: "r"(&new_dir->tablesPhysical));
   u32 cr0;
   asm __volatile__("mov %%cr0, %0": "=r"(cr0));
