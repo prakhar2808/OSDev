@@ -3,7 +3,7 @@
 #include "../libc/string.h"
 #include "../cpu/isr.h"
 #include "../cpu/idt.h"
-#include "../libc/kheap.h"
+#include "../mmu/kheap.h"
 
 void main() {
   isr_install();

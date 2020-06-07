@@ -5,7 +5,7 @@
 #include "framesBitset.h"
 #include "../cpu/isr.h"
 #include "../drivers/screen.h"
-#include "../libc/kheap.h"
+#include "kheap.h"
 
 // Structure for a page entry in a page table
 typedef struct page {
