@@ -7,7 +7,7 @@ The design and the code are heavily inspired by -
 3. http://www.jamesmolloy.co.uk/tutorial_html (Well-explained advanced OS design concepts and implementation!)
 
 The OS has been run on Qemu x86 32-bits emulator.
-Instead of using GRUB, I have created a customer bootloader following cfenollosa's tutorial (1).
+Instead of using GRUB, I have created a custom bootloader following cfenollosa's tutorial (1).
 
 Future Goals - 
 1. File System?
