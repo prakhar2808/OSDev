@@ -21,9 +21,7 @@ s32 find_smallest_hole(u32 size, u8 page_align, heap_t* heap) {
       u32 location = (u32)header;
       s32 offset = 0;
       // Finding the distance to next page boundary after the header.
-      if((location + sizeof(header_t)) &&
-        (location + sizeof(header_t)) && 0xFFFFF000 != 
-        (location + sizeof(header_t))) {
+      if((location + sizeof(header_t) & 0xFFF)) {
           offset = 0x1000 - (location + sizeof(header_t)) % 0x1000;
       }
       // The size of the hole starting from the page boundary just after the
@@ -62,7 +60,7 @@ void expand(u32 new_size, heap_t* heap) {
     return;
   }
   // Nearest page boundary length for new_size.
-  if(new_size && new_size & 0xFFFFF000 != new_size) {
+  if(new_size & 0xFFF) {
     new_size &= 0xFFFFF000;
     new_size += 0x1000; 
   }
@@ -91,7 +89,7 @@ u32 contract(u32 new_size, heap_t* heap) {
     return heap->end_address - heap->start_address;
   }
 
-  if(new_size && new_size & 0xFFFFF000 != new_size) {
+  if(new_size & 0xFFF) {
     new_size &= 0xFFFFF000;
     new_size += 0x1000;
   }
@@ -118,9 +116,7 @@ u32 kmalloc_stub(u32 size, int align, u32* phys) {
   u32 ret;
   if(kheap == 0) {
     //Check if alignment needed, and next free address is available.
-    if(align == 1 && 
-        free_memory_addr &&
-        ((free_memory_addr & 0xFFFFF000) != free_memory_addr)) {
+    if(align == 1 && (free_memory_addr & 0xFFF)) {
       free_memory_addr &= 0xFFFFF000;
       free_memory_addr += 0x1000;
     }
@@ -189,7 +185,7 @@ heap_t* create_heap(u32 start,
   start += sizeof(type_t) * HEAP_INDEX_SIZE;
 
   //Now page-aligning the start index.
-  if(start && (start & 0xFFFFF000 != start)) {
+  if(start & 0xFFF) {
     start &= 0xFFFFF000;
     start += 0x1000;
   }
@@ -281,7 +277,7 @@ void* alloc(u32 size, u8 page_align, heap_t* heap) {
 
   // If data is to be page-aligned, doing it, and making a hole before the
   // block.
-  if(page_align && (orig_hole_pos & 0xFFFFF000)) {
+  if(page_align && (orig_hole_pos & 0xFFF)) {
     // The position from where the block's header should start so that the data
     // can then be page-aligned. This leaves a hole before the header of the
     // data block.
